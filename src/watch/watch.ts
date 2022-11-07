@@ -6,7 +6,8 @@ import chokidar from "chokidar";
 
 import { normalizePath } from "../utils";
 
-export function watchDir(dirPath: string, cb: (actions: "reload" | "css", path: string) => void) {
+export function watchDir(dirPath: string, cb: (action: "reload" | "css", path: string) => void) {
+	let timer: { action: "reload" | "css"; timeout: NodeJS.Timeout } | undefined;
 	const hashes = new Map<string, string | undefined>();
 	let ready = false;
 	const watcher = chokidar.watch(dirPath);
@@ -22,7 +23,16 @@ export function watchDir(dirPath: string, cb: (actions: "reload" | "css", path: 
 		if (isReady) {
 			if (hash !== hashes.get(filePath)) {
 				hashes.set(filePath, hash);
-				cb(Path.extname(filePath) === ".css" ? "css" : "reload", normalizePath(Path.relative(dirPath, filePath), true));
+				if (timer != undefined) {
+					clearTimeout(timer.timeout);
+				}
+				timer = {
+					action: timer?.action === "reload" ? "reload" : Path.extname(filePath) === ".css" ? "css" : "reload",
+					timeout: setTimeout(() => {
+						cb(timer?.action ?? "reload", normalizePath(Path.relative(dirPath, filePath), true));
+						timer = undefined;
+					}, 200),
+				};
 			}
 		} else {
 			hashes.set(filePath, hash);
