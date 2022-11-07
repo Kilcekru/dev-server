@@ -30,7 +30,7 @@ async function main() {
 			loader: {
 				".html": "text",
 			},
-			external: ["./node_modules/*"],
+			external: ["@fastify/static", "@fastify/websocket", "chokidar", "fastify"],
 			watch: watch && {
 				onRebuild: (err) => {
 					if (err) {
