@@ -1,0 +1,38 @@
+<script type="text/javascript">
+	//<![CDATA[
+	(() => {
+		if ("WebSocket" in window) {
+			function refreshCss() {
+				const sheets = document.querySelectorAll("link[rel=stylesheet]");
+				for (const sheet of sheets) {
+					const url = new URL(sheet.href);
+					url.searchParams.set("_cachebust", Date.now().toString());
+					sheet.href = url.href;
+				}
+			}
+
+			function connect() {
+				const url = `ws://${window.location.host}%PREFIX%/ws?path=%PATH%`;
+				const socket = new WebSocket(url);
+				socket.addEventListener("open", () => {
+					console.log("live-reload enabled");
+				});
+				socket.addEventListener("message", (msg) => {
+					if (msg.data === "reload") {
+						window.location.reload();
+					} else if (msg.data === "css") {
+						refreshCss();
+					}
+				});
+				socket.addEventListener("close", () => {
+					setTimeout(connect, 1000);
+				});
+			}
+
+			connect();
+		} else {
+			console.warn("live-reload not available, browser does not support WebSocket");
+		}
+	})();
+	//]]>
+</script>
