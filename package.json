@@ -13,16 +13,28 @@
 	},
 	"homepage": "https://github.com/Kilcekru/dev-server#readme",
 	"bugs": "https://github.com/Kilcekru/dev-server/issues",
+	"engines": {
+		"pnpm": ">=7.15.0"
+	},
 	"files": [
 		"dist/**"
 	],
 	"main": "dist/index.js",
+	"exports": {
+		".": {
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.js"
+		}
+	},
 	"scripts": {
-		"build": "node utils/build.mjs",
-		"dev": "node utils/build.mjs --watch",
+		"build": "tsup --config utils/tsup.config.js",
+		"clean": "rm -rf dist",
+		"clean:all": "rm -rf dist node_modules",
+		"dev": "tsup --config utils/tsup.config.js --watch",
 		"lint": "eslint src",
+		"prepack": "pnpm build",
 		"prettier": "prettier --write .",
-		"validate": "tsc --noEmit --incremental false"
+		"validate": "tsc --noEmit"
 	},
 	"dependencies": {
 		"@fastify/static": "^6.5.0",
@@ -31,12 +43,11 @@
 		"fastify": "^4.9.2"
 	},
 	"devDependencies": {
-		"@kilcekru/ts-basics": "^3.1.0",
+		"@kilcekru/ts-basics": "^3.1.1",
 		"@types/node": "^18.11.9",
 		"@types/ws": "^8.5.3",
-		"esbuild": "^0.15.13",
-		"nodemon": "^2.0.20",
 		"prettier": "^2.7.1",
+		"tsup": "^6.4.0",
 		"typescript": "^4.8.4"
 	}
 }

@@ -1,6 +1,6 @@
-import { start } from "../dist/index.js";
+import { start } from "../dist/index.mjs";
 
 start({
 	port: 8080,
-	root: "./test",
+	root: "./utils/public",
 });
