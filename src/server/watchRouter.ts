@@ -1,17 +1,30 @@
 import { FastifyPluginCallback } from "fastify";
 import type { WebSocket } from "ws";
 
-import { watchDir } from "../watch/watch";
+import { WatchOptions } from "./types";
+import { watchDir } from "./watch";
 
-export const wsRouter: FastifyPluginCallback<{ root: string }> = async (fastify, { root }) => {
+export type WatchRouterOption = {
+	dirPath: string;
+} & WatchOptions;
+
+export const watchRouter: FastifyPluginCallback<WatchRouterOption> = async (
+	fastify,
+	{ chrootRefresh, delay, dirPath, hashFiles }
+) => {
 	const listeners = new Set<{ path: string; socket: WebSocket }>();
 
-	watchDir(root, (action, path) => {
-		for (const listener of listeners) {
-			if (path.startsWith(listener.path)) {
-				listener.socket.send(action);
+	watchDir({
+		cb: (action, path) => {
+			for (const listener of listeners) {
+				if (!chrootRefresh || path.startsWith(listener.path)) {
+					listener.socket.send(action);
+				}
 			}
-		}
+		},
+		delay,
+		dirPath,
+		hashFiles,
 	});
 
 	await fastify.register(async function (fastify) {

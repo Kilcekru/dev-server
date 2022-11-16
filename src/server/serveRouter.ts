@@ -5,20 +5,26 @@ import { FastifyPluginCallback } from "fastify";
 
 import { injectClientScript } from "../client/inject";
 import { isFastifyStaticStream, normalizePath, streamToString } from "../utils";
-import { wsRouter } from "./wsRouter";
+import { WatchOptions } from "./types";
+import { watchRouter } from "./watchRouter";
 
-export const serveRouter: FastifyPluginCallback<{
-	root: string;
+export type ServeRouterOptions = {
+	dirPath: string;
 	prefix: string;
-}> = async (fastify, { root, prefix }) => {
+} & WatchOptions;
+
+export const serveRouter: FastifyPluginCallback<ServeRouterOptions> = async (
+	fastify,
+	{ chrootRefresh, delay, dirPath, hashFiles, prefix }
+) => {
 	fastify.addHook("onSend", async (req, reply, payload) => {
 		const contentType = reply.getHeader("content-type");
 		if (typeof contentType === "string" && contentType.startsWith("text/html") && isFastifyStaticStream(payload)) {
 			let html: string = await streamToString(payload);
 			html = injectClientScript({
 				html,
-				path: normalizePath(Path.relative(root, Path.dirname(payload.filename)), false),
-				prefix,
+				path: normalizePath(Path.relative(dirPath, Path.dirname(payload.filename)), true),
+				prefix: normalizePath(prefix, true),
 			});
 			return html;
 		}
@@ -26,8 +32,8 @@ export const serveRouter: FastifyPluginCallback<{
 	});
 
 	await fastify.register(FastifyStatic, {
-		root,
+		root: dirPath,
 	});
 
-	await fastify.register(wsRouter, { root });
+	await fastify.register(watchRouter, { chrootRefresh, delay, dirPath, hashFiles });
 };

@@ -27,9 +27,9 @@ export function log(...args: unknown[]) {
 	console.log(...args); // eslint-disable-line no-console
 }
 
-export function normalizePath(str: string, isFile: boolean) {
+export function normalizePath(str: string, trailingSlash: boolean) {
 	if (str === "") {
 		return "/";
 	}
-	return `/${str.replaceAll(/\\/g, "/")}${isFile ? "" : "/"}`;
+	return `/${str.replaceAll(/\\/g, "/")}${trailingSlash ? "/" : ""}`.replaceAll(/\/+/g, "/");
 }

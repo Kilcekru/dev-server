@@ -1,6 +1,8 @@
-import { start } from "../dist/index.mjs";
+import { startServer } from "../dist/index.mjs";
 
-start({
+startServer({
 	port: 8080,
 	root: "./utils/public",
+	chrootRefresh: true,
+	hashFiles: true,
 });

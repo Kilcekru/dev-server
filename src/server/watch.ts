@@ -5,8 +5,14 @@ import * as Path from "node:path";
 import chokidar from "chokidar";
 
 import { normalizePath } from "../utils";
+import { WatchOptions } from "./types";
 
-export function watchDir(dirPath: string, cb: (action: "reload" | "css", path: string) => void) {
+export type WatchDirArgs = {
+	cb: (action: "reload" | "css", path: string) => void;
+	dirPath: string;
+} & WatchOptions;
+
+export function watchDir({ cb, delay, dirPath, hashFiles }: WatchDirArgs) {
 	let timer: { action: "reload" | "css"; timeout: NodeJS.Timeout } | undefined;
 	const hashes = new Map<string, string | undefined>();
 	let ready = false;
@@ -19,9 +25,9 @@ export function watchDir(dirPath: string, cb: (action: "reload" | "css", path: s
 			return;
 		}
 		const isReady = ready;
-		const hash = event === "unlink" ? undefined : await hashFile(filePath);
+		const hash = !hashFiles || event === "unlink" ? undefined : await hashFile(filePath);
 		if (isReady) {
-			if (hash !== hashes.get(filePath)) {
+			if (!hashFiles || hash !== hashes.get(filePath)) {
 				hashes.set(filePath, hash);
 				if (timer != undefined) {
 					clearTimeout(timer.timeout);
@@ -29,9 +35,9 @@ export function watchDir(dirPath: string, cb: (action: "reload" | "css", path: s
 				timer = {
 					action: timer?.action === "reload" ? "reload" : Path.extname(filePath) === ".css" ? "css" : "reload",
 					timeout: setTimeout(() => {
-						cb(timer?.action ?? "reload", normalizePath(Path.relative(dirPath, filePath), true));
+						cb(timer?.action ?? "reload", normalizePath(Path.relative(dirPath, filePath), false));
 						timer = undefined;
-					}, 200),
+					}, delay ?? 200),
 				};
 			}
 		} else {
