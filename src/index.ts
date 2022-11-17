@@ -45,6 +45,7 @@ export type DevServerOptions = {
 	root: string | Record<string, string>;
 	port: number;
 	host?: string;
+	reloadOnReconnect?: boolean;
 } & WatchOptions;
 
 export default { startServer };

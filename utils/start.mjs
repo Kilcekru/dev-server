@@ -5,4 +5,5 @@ startServer({
 	root: "./utils/public",
 	chrootRefresh: true,
 	hashFiles: true,
+	reloadOnReconnect: true,
 });

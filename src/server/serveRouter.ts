@@ -11,11 +11,12 @@ import { watchRouter } from "./watchRouter";
 export type ServeRouterOptions = {
 	dirPath: string;
 	prefix: string;
+	reloadOnReconnect?: boolean;
 } & WatchOptions;
 
 export const serveRouter: FastifyPluginCallback<ServeRouterOptions> = async (
 	fastify,
-	{ dirPath, prefix, ...options }
+	{ dirPath, prefix, reloadOnReconnect, ...options }
 ) => {
 	fastify.addHook("onSend", async (req, reply, payload) => {
 		const contentType = reply.getHeader("content-type");
@@ -25,6 +26,7 @@ export const serveRouter: FastifyPluginCallback<ServeRouterOptions> = async (
 				html,
 				path: normalizePath(Path.relative(dirPath, Path.dirname(payload.filename)), true),
 				prefix: normalizePath(prefix, true),
+				reloadOnReconnect,
 			});
 			return html;
 		}

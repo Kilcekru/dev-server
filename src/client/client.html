@@ -2,6 +2,7 @@
 	//<![CDATA[
 	(() => {
 		if ("WebSocket" in window) {
+			let connectionLost = false;
 			function refreshCss() {
 				const sheets = document.querySelectorAll("link[rel=stylesheet]");
 				for (const sheet of sheets) {
@@ -13,10 +14,15 @@
 			}
 
 			function connect() {
-				const url = `ws://${window.location.host}%PREFIX%ws?path=%PATH%`;
+				const url = `ws://${window.location.host}_PREFIX_ws?path=_PATH_`;
 				const socket = new WebSocket(url);
 				socket.addEventListener("open", () => {
-					console.log("live-reload: enabled");
+					if (_AUTORELOAD_ && connectionLost) {
+						window.location.reload();
+					} else {
+						console.log("live-reload: enabled");
+						connectionLost = false;
+					}
 				});
 				socket.addEventListener("message", (msg) => {
 					if (msg.data === "reload") {
@@ -26,6 +32,10 @@
 					}
 				});
 				socket.addEventListener("close", () => {
+					if (!connectionLost) {
+						connectionLost = true;
+						console.log("live-reload: lost socket connection");
+					}
 					setTimeout(connect, 1000);
 				});
 			}
