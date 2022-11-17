@@ -12,7 +12,7 @@ export type WatchDirArgs = {
 	dirPath: string;
 } & WatchOptions;
 
-export function watchDir({ cb, delay, dirPath, hashFiles }: WatchDirArgs) {
+export function watchDir({ cb, delay, dirPath, hashFiles, injectCss }: WatchDirArgs) {
 	let timer: { action: "reload" | "css"; timeout: NodeJS.Timeout } | undefined;
 	const hashes = new Map<string, string | undefined>();
 	let ready = false;
@@ -33,7 +33,8 @@ export function watchDir({ cb, delay, dirPath, hashFiles }: WatchDirArgs) {
 					clearTimeout(timer.timeout);
 				}
 				timer = {
-					action: timer?.action === "reload" ? "reload" : Path.extname(filePath) === ".css" ? "css" : "reload",
+					action:
+						timer?.action === "reload" || injectCss === false || Path.extname(filePath) !== ".css" ? "reload" : "css",
 					timeout: setTimeout(() => {
 						cb(timer?.action ?? "reload", normalizePath(Path.relative(dirPath, filePath), false));
 						timer = undefined;

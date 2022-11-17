@@ -15,7 +15,7 @@ export type ServeRouterOptions = {
 
 export const serveRouter: FastifyPluginCallback<ServeRouterOptions> = async (
 	fastify,
-	{ chrootRefresh, delay, dirPath, hashFiles, prefix }
+	{ dirPath, prefix, ...options }
 ) => {
 	fastify.addHook("onSend", async (req, reply, payload) => {
 		const contentType = reply.getHeader("content-type");
@@ -35,5 +35,5 @@ export const serveRouter: FastifyPluginCallback<ServeRouterOptions> = async (
 		root: dirPath,
 	});
 
-	await fastify.register(watchRouter, { chrootRefresh, delay, dirPath, hashFiles });
+	await fastify.register(watchRouter, { dirPath, ...options });
 };

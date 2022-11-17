@@ -9,32 +9,28 @@ import { log } from "./utils";
 
 const fastify = Fastify();
 
-export async function startServer(options: DevServerOptions) {
+export async function startServer({ port, root, host, ...options }: DevServerOptions) {
 	await fastify.register(FastifySocket);
 
-	if (typeof options.root === "string") {
+	if (typeof root === "string") {
 		await fastify.register(serveRouter, {
-			chrootRefresh: options.chrootRefresh,
-			delay: options.delay,
-			dirPath: Path.resolve(options.root),
-			hashFiles: options.hashFiles,
+			dirPath: Path.resolve(root),
 			prefix: "",
+			...options,
 		});
 	} else {
-		for (const [prefix, root] of Object.entries(options.root)) {
+		for (const [prefix, dirPath] of Object.entries(root)) {
 			await fastify.register(serveRouter, {
-				chrootRefresh: options.chrootRefresh,
-				delay: options.delay,
-				dirPath: Path.resolve(root),
-				hashFiles: options.hashFiles,
+				dirPath: Path.resolve(dirPath),
 				prefix: prefix.startsWith("/") ? prefix : `/${prefix}`,
+				...options,
 			});
 		}
 	}
 
 	const address = await fastify.listen({
-		host: options.host ?? "localhost",
-		port: options.port,
+		host: host ?? "localhost",
+		port,
 	});
 	log(`dev-server is listening on ${address}`);
 

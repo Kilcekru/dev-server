@@ -8,10 +8,7 @@ export type WatchRouterOption = {
 	dirPath: string;
 } & WatchOptions;
 
-export const watchRouter: FastifyPluginCallback<WatchRouterOption> = async (
-	fastify,
-	{ chrootRefresh, delay, dirPath, hashFiles }
-) => {
+export const watchRouter: FastifyPluginCallback<WatchRouterOption> = async (fastify, { chrootRefresh, ...options }) => {
 	const listeners = new Set<{ path: string; socket: WebSocket }>();
 
 	watchDir({
@@ -22,9 +19,7 @@ export const watchRouter: FastifyPluginCallback<WatchRouterOption> = async (
 				}
 			}
 		},
-		delay,
-		dirPath,
-		hashFiles,
+		...options,
 	});
 
 	await fastify.register(async function (fastify) {

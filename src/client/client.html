@@ -9,13 +9,14 @@
 					url.searchParams.set("_cachebust", Date.now().toString());
 					sheet.href = url.href;
 				}
+				console.log("live-reload: css refreshed");
 			}
 
 			function connect() {
 				const url = `ws://${window.location.host}%PREFIX%ws?path=%PATH%`;
 				const socket = new WebSocket(url);
 				socket.addEventListener("open", () => {
-					console.log("live-reload enabled");
+					console.log("live-reload: enabled");
 				});
 				socket.addEventListener("message", (msg) => {
 					if (msg.data === "reload") {
