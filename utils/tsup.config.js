@@ -10,5 +10,5 @@ export default defineConfig((options) => ({
 	dts: true,
 	platform: "node",
 	watch: options.watch,
-	onSuccess: options.watch ? "node utils/start.mjs" : undefined,
+	onSuccess: options.watch ? "node utils/start.js" : undefined,
 }));

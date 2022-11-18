@@ -5,13 +5,20 @@ import * as Path from "node:path";
 import chokidar from "chokidar";
 
 import { normalizePath } from "../utils";
-import { WatchOptions } from "./types";
+
+export interface WatchOptions {
+	chrootRefresh?: boolean;
+	delay?: number;
+	hashFiles?: boolean;
+	injectCss?: boolean;
+}
 
 export type WatchDirArgs = {
 	cb: (action: "reload" | "css", path: string) => void;
 	dirPath: string;
 } & WatchOptions;
 
+/** Watch a directory and trigger actions on file changes. */
 export function watchDir({ cb, delay, dirPath, hashFiles, injectCss }: WatchDirArgs) {
 	let timer: { action: "reload" | "css"; timeout: NodeJS.Timeout } | undefined;
 	const hashes = new Map<string, string | undefined>();
@@ -38,7 +45,7 @@ export function watchDir({ cb, delay, dirPath, hashFiles, injectCss }: WatchDirA
 					timeout: setTimeout(() => {
 						cb(timer?.action ?? "reload", normalizePath(Path.relative(dirPath, filePath), false));
 						timer = undefined;
-					}, delay ?? 200),
+					}, delay ?? 100),
 				};
 			}
 		} else {

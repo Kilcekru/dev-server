@@ -5,7 +5,7 @@ import { FastifyPluginCallback } from "fastify";
 
 import { injectClientScript } from "../client/inject";
 import { isFastifyStaticStream, normalizePath, streamToString } from "../utils";
-import { WatchOptions } from "./types";
+import { WatchOptions } from "./watch";
 import { watchRouter } from "./watchRouter";
 
 export type ServeRouterOptions = {
@@ -14,6 +14,10 @@ export type ServeRouterOptions = {
 	reloadOnReconnect?: boolean;
 } & WatchOptions;
 
+/**
+ * Router to serve a directory.\
+ * Also handles watching, websocket connection and refreshing html.
+ */
 export const serveRouter: FastifyPluginCallback<ServeRouterOptions> = async (
 	fastify,
 	{ dirPath, prefix, reloadOnReconnect, ...options }

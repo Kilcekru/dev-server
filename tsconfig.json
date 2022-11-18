@@ -1,4 +1,7 @@
 {
 	"extends": "@kilcekru/ts-basics/tsconfig-node-library.json",
+	"compilerOptions": {
+		"removeComments": false
+	},
 	"include": ["src"]
 }

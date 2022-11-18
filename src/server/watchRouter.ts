@@ -1,13 +1,13 @@
 import { FastifyPluginCallback } from "fastify";
 import type { WebSocket } from "ws";
 
-import { WatchOptions } from "./types";
-import { watchDir } from "./watch";
+import { watchDir, WatchOptions } from "./watch";
 
 export type WatchRouterOption = {
 	dirPath: string;
 } & WatchOptions;
 
+/** Router to watch a directory and send refresh actions over websocket */
 export const watchRouter: FastifyPluginCallback<WatchRouterOption> = async (fastify, { chrootRefresh, ...options }) => {
 	const listeners = new Set<{ path: string; socket: WebSocket }>();
 

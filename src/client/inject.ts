@@ -7,6 +7,9 @@ interface InjectOptions {
 	reloadOnReconnect?: boolean;
 }
 
+/**
+ * Inject client script in given html
+ */
 export function injectClientScript({ html, path, prefix, reloadOnReconnect }: InjectOptions): string {
 	const script = clientScript
 		.replace("_PREFIX_", prefix)

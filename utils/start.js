@@ -1,4 +1,4 @@
-import { startServer } from "../dist/index.mjs";
+const { startServer } = require("..");
 
 startServer({
 	port: 8080,
