@@ -117,6 +117,9 @@ export type DevServerOptions = {
 export interface DevServerResult {
 	/** Address dev-server is listening on. */
 	address: string;
-	/** Function to close the dev-server. */
+	/**
+	 * Function to close the dev-server.\
+	 * Returns a Promise that resolves when the server is closed.
+	 */
 	stop: () => Promise<void>;
 }
