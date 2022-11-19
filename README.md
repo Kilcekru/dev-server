@@ -30,6 +30,9 @@ const server = await startServer({
 	hashFiles: false, // prevent reloads if file change has same content
 });
 
+// address the server is listening on
+console.log(server.address);
+
 // you can manually stop the server
 await server.stop();
 
