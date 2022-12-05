@@ -1,6 +1,6 @@
 {
 	"name": "@kilcekru/dev-server",
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"description": "",
 	"license": "MIT",
 	"author": {
@@ -32,8 +32,8 @@
 		"clean:all": "rm -rf dist node_modules",
 		"dev": "tsup --config utils/tsup.config.js --watch",
 		"lint": "eslint src",
-		"postinstall": "husky install utils/husky",
-		"prepack": "pnpm build",
+		"prepack": "pnpm validate && pnpm lint && pnpm build",
+		"prepare": "husky install utils/husky",
 		"prettier": "prettier --write .",
 		"validate": "tsc --noEmit"
 	},
