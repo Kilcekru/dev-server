@@ -14,13 +14,14 @@ export interface WatchOptions {
 }
 
 export type WatchDirArgs = {
-	cb: (action: "reload" | "css", path: string) => void;
+	cb: (action: "reload" | "css", paths: string[]) => void;
 	dirPath: string;
 } & WatchOptions;
 
 /** Watch a directory and trigger actions on file changes. */
 export function watchDir({ cb, delay, dirPath, hashFiles, injectCss }: WatchDirArgs) {
 	let timer: { action: "reload" | "css"; timeout: NodeJS.Timeout } | undefined;
+	let paths = new Set<string>();
 	const hashes = new Map<string, string | undefined>();
 	let ready = false;
 	const watcher = chokidar.watch(dirPath);
@@ -39,12 +40,14 @@ export function watchDir({ cb, delay, dirPath, hashFiles, injectCss }: WatchDirA
 				if (timer != undefined) {
 					clearTimeout(timer.timeout);
 				}
+				paths.add(normalizePath(Path.relative(dirPath, filePath), false));
 				timer = {
 					action:
 						timer?.action === "reload" || injectCss === false || Path.extname(filePath) !== ".css" ? "reload" : "css",
 					timeout: setTimeout(() => {
-						cb(timer?.action ?? "reload", normalizePath(Path.relative(dirPath, filePath), false));
+						cb(timer?.action ?? "reload", [...paths]);
 						timer = undefined;
+						paths = new Set();
 					}, delay ?? 100),
 				};
 			}

@@ -12,9 +12,9 @@ export const watchRouter: FastifyPluginCallback<WatchRouterOption> = async (fast
 	const listeners = new Set<{ path: string; socket: WebSocket }>();
 
 	watchDir({
-		cb: (action, path) => {
+		cb: (action, paths) => {
 			for (const listener of listeners) {
-				if (!chrootRefresh || path.startsWith(listener.path)) {
+				if (!chrootRefresh || paths.some((path) => path.startsWith(listener.path))) {
 					listener.socket.send(action);
 				}
 			}
