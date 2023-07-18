@@ -6,11 +6,14 @@ import chokidar from "chokidar";
 
 import { normalizePath } from "../utils";
 
+export type IgnoredMatcher = chokidar.WatchOptions["ignored"];
+
 export interface WatchOptions {
 	chrootRefresh?: boolean;
 	delay?: number;
 	hashFiles?: boolean;
 	injectCss?: boolean;
+	ignored?: IgnoredMatcher;
 }
 
 export type WatchDirArgs = {
@@ -19,12 +22,12 @@ export type WatchDirArgs = {
 } & WatchOptions;
 
 /** Watch a directory and trigger actions on file changes. */
-export function watchDir({ cb, delay, dirPath, hashFiles, injectCss }: WatchDirArgs) {
+export function watchDir({ cb, delay, dirPath, hashFiles, injectCss, ignored }: WatchDirArgs) {
 	let timer: { action: "reload" | "css"; timeout: NodeJS.Timeout } | undefined;
 	let paths = new Set<string>();
 	const hashes = new Map<string, string | undefined>();
 	let ready = false;
-	const watcher = chokidar.watch(dirPath);
+	const watcher = chokidar.watch(dirPath, { ignored: ignored });
 	watcher.on("ready", () => {
 		ready = true;
 	});

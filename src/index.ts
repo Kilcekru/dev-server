@@ -4,6 +4,7 @@ import FastifySocket from "@fastify/websocket";
 import Fastify from "fastify";
 
 import { serveRouter } from "./server/serveRouter";
+import { IgnoredMatcher } from "./server/watch";
 import { log } from "./utils";
 
 const fastify = Fastify();
@@ -112,6 +113,14 @@ export type DevServerOptions = {
 	 * @defaultValue false
 	 */
 	reloadOnReconnect?: boolean;
+
+	/**
+	 * Defines files/paths to be ignored. anymatch-compatible definition.\
+	 * Absolute file path is tested, not just filename.\
+	 * If a function is provided, it gets called twice per path,
+	 * once with a single argument (file path), second time with 2 arguments (file path, fs.Stats object).
+	 */
+	ignored?: IgnoredMatcher;
 };
 
 export interface DevServerResult {

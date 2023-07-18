@@ -110,6 +110,13 @@ e.g. esbuild will write every file on every build.
 
 This will increase CPU load especially if a lot of files are watched.
 
+#### `ignored`
+
+Type: [anymatch](https://github.com/es128/anymatch)-compatible definition
+
+Defines files/paths to be ignored, absolute file path is tested, not just filename.\
+If a function is provided, it gets called twice per path, once with a single argument (file path), second time with 2 arguments (file path, fs.Stats object).
+
 ### DevServerResult
 
 #### `address`
