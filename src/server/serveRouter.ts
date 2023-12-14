@@ -39,6 +39,7 @@ export const serveRouter: FastifyPluginCallback<ServeRouterOptions> = async (
 
 	await fastify.register(FastifyStatic, {
 		root: dirPath,
+		redirect: true,
 	});
 
 	await fastify.register(watchRouter, { dirPath, ...options });

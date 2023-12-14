@@ -1,6 +1,6 @@
 {
 	"name": "@kilcekru/dev-server",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"description": "",
 	"license": "MIT",
 	"author": {
@@ -38,6 +38,7 @@
 		"validate": "tsc --noEmit"
 	},
 	"dependencies": {
+		"@fastify/middie": "^8.3.0",
 		"@fastify/static": "^6.5.0",
 		"@fastify/websocket": "^7.1.1",
 		"chokidar": "^3.5.3",

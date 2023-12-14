@@ -28,6 +28,8 @@ const server = await startServer({
 	reloadOnReconnect: false, // Reload html when dev-server is restarted
 	chrootRefresh: false, // Refresh html only on changes in the same or a sub-directory
 	hashFiles: false, // prevent reloads if file change has same content
+	ignored: undefined, // Defines files/paths to be ignored for file-watching
+	middleware: undefined, // Array of middleware to add custom handling for requests
 });
 
 // address the server is listening on
@@ -112,10 +114,29 @@ This will increase CPU load especially if a lot of files are watched.
 
 #### `ignored`
 
-Type: [anymatch](https://github.com/es128/anymatch)-compatible definition
+Type: [anymatch](https://github.com/es128/anymatch)-compatible definition.\
+Default: `undefined`
 
 Defines files/paths to be ignored, absolute file path is tested, not just filename.\
 If a function is provided, it gets called twice per path, once with a single argument (file path), second time with 2 arguments (file path, fs.Stats object).
+
+#### `middleware`
+
+Type:
+```typescript
+Array<{
+	path?: string | string[];
+	handler: (req: http.IncomingMessage, res: http.ServerResponse, next: (err?: unknown) => void) => void;
+}>
+```
+Default: `undefined`
+
+Array of middleware for custom handling of requests.
+
+Middleware take precedence over any other route of dev-server.\
+Middleware functions will be called in given order if their path matches request url.
+
+Middleware are registers using [@fastify/middie](https://www.npmjs.com/package/@fastify/middie).
 
 ### DevServerResult
 
