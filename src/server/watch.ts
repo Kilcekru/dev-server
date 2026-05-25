@@ -2,11 +2,11 @@ import * as Crypto from "node:crypto";
 import * as FS from "node:fs";
 import * as Path from "node:path";
 
-import chokidar from "chokidar";
+import chokidar, { ChokidarOptions } from "chokidar";
 
 import { normalizePath } from "../utils";
 
-export type IgnoredMatcher = chokidar.WatchOptions["ignored"];
+export type IgnoredMatcher = ChokidarOptions["ignored"];
 
 export interface WatchOptions {
 	chrootRefresh?: boolean;
@@ -27,7 +27,7 @@ export function watchDir({ cb, delay, dirPath, hashFiles, injectCss, ignored }: 
 	let paths = new Set<string>();
 	const hashes = new Map<string, string | undefined>();
 	let ready = false;
-	const watcher = chokidar.watch(dirPath, { ignored: ignored });
+	const watcher = chokidar.watch(dirPath, { ignored });
 	watcher.on("ready", () => {
 		ready = true;
 	});
@@ -69,7 +69,7 @@ async function hashFile(path: string) {
 			input.on("end", () => resolve(hash.digest("base64")));
 			input.on("error", reject);
 		});
-	} catch (err) {
+	} catch {
 		return undefined;
 	}
 }

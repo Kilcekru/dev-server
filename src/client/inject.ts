@@ -4,7 +4,7 @@ interface InjectOptions {
 	html: string;
 	path: string;
 	prefix: string;
-	reloadOnReconnect?: boolean;
+	reloadOnReconnect?: boolean | undefined;
 }
 
 /**

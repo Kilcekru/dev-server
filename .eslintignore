@@ -1,9 +1,0 @@
-node_modules
-/dist
-
-/.eslintignore
-/.eslintrc.js
-/.prettierignore
-/.gitignore
-
-*.md

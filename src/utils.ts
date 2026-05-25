@@ -21,7 +21,7 @@ export async function streamToString(stream: Stream): Promise<string> {
 	return await new Promise<string>((resolve, reject) => {
 		const chunks: Buffer[] = [];
 		stream.on("data", (chunk: Buffer | string) => chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk)));
-		stream.on("error", (err) => reject(err));
+		stream.on("error", (err) => reject(err instanceof Error ? err : new Error("Unknown Error")));
 		stream.on("end", () => resolve(Buffer.concat(chunks).toString("utf-8")));
 	});
 }

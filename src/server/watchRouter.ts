@@ -23,18 +23,18 @@ export const watchRouter: FastifyPluginCallback<WatchRouterOption> = async (fast
 	});
 
 	await fastify.register(async function (fastify) {
-		fastify.get<{ Querystring: { path?: string } }>("/ws", { websocket: true }, (connection, req) => {
+		fastify.get<{ Querystring: { path?: string } }>("/ws", { websocket: true }, (socket, req) => {
 			if (req.query.path != undefined) {
 				const listener = {
 					path: req.query.path,
-					socket: connection.socket,
+					socket,
 				};
 				listeners.add(listener);
-				connection.socket.on("close", () => {
+				socket.on("close", () => {
 					listeners.delete(listener);
 				});
 			} else {
-				connection.end();
+				socket.close();
 			}
 		});
 	});
