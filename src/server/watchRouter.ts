@@ -27,14 +27,14 @@ export const watchRouter: FastifyPluginCallback<WatchRouterOption> = async (fast
 			if (req.query.path != undefined) {
 				const listener = {
 					path: req.query.path,
-					socket: connection.socket,
+					socket: connection,
 				};
 				listeners.add(listener);
-				connection.socket.on("close", () => {
+				connection.on("close", () => {
 					listeners.delete(listener);
 				});
 			} else {
-				connection.end();
+				connection.close();
 			}
 		});
 	});
