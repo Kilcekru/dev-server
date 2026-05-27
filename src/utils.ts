@@ -7,12 +7,9 @@ export function hasKey<Key extends string>(value: unknown, key: Key): value is {
 }
 
 /** Check if given value is a stream from fastify static */
-export function isFastifyStaticStream(value: unknown): value is Stream & { filename: string } {
+export function isFastifyStaticStream(value: unknown): value is Stream & { path: string } {
 	return (
-		hasKey(value, "pipe") &&
-		typeof value.pipe === "function" &&
-		hasKey(value, "filename") &&
-		typeof value.filename === "string"
+		hasKey(value, "pipe") && typeof value.pipe === "function" && hasKey(value, "path") && typeof value.path === "string"
 	);
 }
 
@@ -27,12 +24,12 @@ export async function streamToString(stream: Stream): Promise<string> {
 }
 
 /** wrapper for console.log */
-export function log(...args: unknown[]) {
+export function log(...args: unknown[]): void {
 	console.log(...args); // eslint-disable-line no-console
 }
 
 /** normalize given path */
-export function normalizePath(str: string, trailingSlash: boolean) {
+export function normalizePath(str: string, trailingSlash: boolean): string {
 	if (str === "") {
 		return "/";
 	}

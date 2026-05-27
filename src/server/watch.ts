@@ -22,7 +22,7 @@ export type WatchDirArgs = {
 } & WatchOptions;
 
 /** Watch a directory and trigger actions on file changes. */
-export function watchDir({ cb, delay, dirPath, hashFiles, injectCss, ignored }: WatchDirArgs) {
+export function watchDir({ cb, delay, dirPath, hashFiles, injectCss, ignored }: WatchDirArgs): void {
 	let timer: { action: "reload" | "css"; timeout: NodeJS.Timeout } | undefined;
 	let paths = new Set<string>();
 	const hashes = new Map<string, string | undefined>();
@@ -60,7 +60,7 @@ export function watchDir({ cb, delay, dirPath, hashFiles, injectCss, ignored }: 
 	});
 }
 
-async function hashFile(path: string) {
+async function hashFile(path: string): Promise<string | undefined> {
 	try {
 		return await new Promise<string>((resolve, reject) => {
 			const hash = Crypto.createHash("sha1");

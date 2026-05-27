@@ -1,7 +1,8 @@
 {
 	"extends": "@kilcekru/ts-basics/tsconfig-node-library.json",
 	"compilerOptions": {
-		"exactOptionalPropertyTypes": false
+		"isolatedDeclarations": true,
+		"declarationMap": false
 	},
 	"include": ["src"]
 }

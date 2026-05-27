@@ -19,18 +19,18 @@
 	"files": [
 		"dist/**"
 	],
-	"main": "dist/index.js",
+	"main": "dist/index.cjs",
 	"exports": {
 		".": {
 			"import": "./dist/index.mjs",
-			"require": "./dist/index.js"
+			"require": "./dist/index.cjs"
 		}
 	},
 	"scripts": {
-		"build": "tsup --config utils/tsup.config.js",
+		"build": "tsdown --config utils/tsdown.config.mjs",
 		"clean": "rm -rf dist",
 		"clean:all": "rm -rf dist node_modules",
-		"dev": "tsup --config utils/tsup.config.js --watch",
+		"dev": "tsdown --config utils/tsdown.config.mjs --watch",
 		"lint": "eslint src",
 		"prepack": "pnpm validate && pnpm lint && pnpm build",
 		"prepare": "husky utils/husky",
@@ -51,7 +51,7 @@
 		"eslint": "^9.39.4",
 		"husky": "^9.1.7",
 		"prettier": "^3.8.3",
-		"tsup": "^8.5.1",
+		"tsdown": "^0.22.0",
 		"typescript": "^6.0.3"
 	}
 }

@@ -6,8 +6,10 @@ import Fastify from "fastify";
 import type { IncomingMessage, ServerResponse } from "http";
 
 import { serveRouter } from "./server/serveRouter";
-import { IgnoredMatcher } from "./server/watch";
+import type { IgnoredMatcher } from "./server/watch";
 import { log } from "./utils";
+
+export { IgnoredMatcher };
 
 const fastify = Fastify();
 

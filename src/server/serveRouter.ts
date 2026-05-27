@@ -20,7 +20,7 @@ export type ServeRouterOptions = {
  */
 export const serveRouter: FastifyPluginCallback<ServeRouterOptions> = async (
 	fastify,
-	{ dirPath, prefix, reloadOnReconnect, ...options }
+	{ dirPath, prefix, reloadOnReconnect, ...options },
 ) => {
 	fastify.addHook("onSend", async (req, reply, payload) => {
 		const contentType = reply.getHeader("content-type");
@@ -28,7 +28,7 @@ export const serveRouter: FastifyPluginCallback<ServeRouterOptions> = async (
 			let html: string = await streamToString(payload);
 			html = injectClientScript({
 				html,
-				path: normalizePath(Path.relative(dirPath, Path.dirname(payload.filename)), true),
+				path: normalizePath(Path.relative(dirPath, Path.dirname(payload.path)), true),
 				prefix: normalizePath(prefix, true),
 				reloadOnReconnect,
 			});
