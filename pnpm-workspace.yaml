@@ -4,4 +4,4 @@ strictPeerDependencies: true
 allowBuilds:
   esbuild: true
 minimumReleaseAgeExclude:
-  - "@kilcekru/ts-basics@5.0.0-next.1"
+  - "@kilcekru/ts-basics@5.0.0"
